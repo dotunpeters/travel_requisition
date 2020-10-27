@@ -1,0 +1,70 @@
+{% extends 'application/layout.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'application/dashboard.css' %}" type="text/css">
+{% endblock style %}
+
+{% block body %}
+
+    <a href="{% url 'application:index' %}" class="left">Visit Homepage</a>
+    <a href="{% url 'application:signout' %}" class="right">Logout</a>
+    <hr>
+
+    <span> Dashboard Page </span>
+    <h3>Request Trip</h3>
+    <form method="POST", action={% url 'application:travelrequest' %}>
+        {% csrf_token %}
+
+        <div class="wrap-input100 validate-input customer" data-validate = "Valid username is required: xxyz">
+            <input class="input100" type="text" name="trip" placeholder="Trip">
+            <span class="focus-input100"></span>
+            <span class="symbol-input100">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+            </span>
+        </div>
+
+        <div class="wrap-input100 validate-input customer" data-validate = "Valid username is required: xxyz">
+            <input class="input100" type="date" name="date" placeholder="Date">
+            <span class="focus-input100"></span>
+            <span class="symbol-input100">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+            </span>
+        </div>
+
+        <div class="container-login100-form-btn">
+            <input type="submit" value="Request" class="login100-form-btn">
+        </div>
+    </form>
+
+    {% if trips is empty %}
+        <p> You have request no trip </p>
+    {% endif %}
+
+    <table>
+        <tr>
+            <th> Trip To </th>
+            <th> Date </th>
+            <th> Status </th>
+        </tr>
+        {% for each in trips %}
+        <tr>
+            <td> {{each.trip}} </td>
+            <td> {{each.traveldate}} </td>
+            <td> {{each.status}} </td>
+        </tr>
+        {% empty %}
+            <p> You have request no trip </p>
+        {% endfor %}
+
+    </table>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+{% endblock %}
